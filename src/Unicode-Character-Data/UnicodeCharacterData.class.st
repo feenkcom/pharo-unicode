@@ -662,51 +662,6 @@ UnicodeCharacterData >> generalCategory [
 	^ self class generalCategories at: index + 1
 ]
 
-{ #category : #'gt-inspector-extension' }
-UnicodeCharacterData >> gtInspectorCharacterIn: composite [
-	<gtInspectorPresentationOrder: 30>
-	^ composite table
-		title: 'Character';
-		display: [
-			{
-				{ 'codepoint'. self codePoint }.
-				{ 'codepoint hex'. 
-					String streamContents: [ :stream | 
-						stream << 'U+'.
-						self codePoint printOn: stream base: 16 nDigits: 4 ].
-					self codePoint }.
-				{ 'character'. self character printString. self character }.
-				{ 'name'. self name }.
-				{ 'old name'. self oldName ifNil: [ '' ]. self oldName }.
-				{ 'general category'. self generalCategory }.
-				{ 'canonical combining class'. self canonicalCombiningClass }.
-				{ 'bidirectional category'. self bidirectionalCategory }.
-				{ 'mirrored'. self mirrored }.
-				{ 'uppercase'. 
-					self uppercase ifNotNil: [ :n | Character codePoint: n ] ifNil: [ '' ]. 
-					self class forCodePoint: self uppercase ifAbsent: [] }.
-				{ 'lowercase'. 
-					self lowercase ifNotNil: [ :n | Character codePoint: n ] ifNil: [ '' ]. 
-					self class forCodePoint: self lowercase ifAbsent: [] }.
-				{ 'titlecase'. 
-					self titlecase ifNotNil: [ :n | Character codePoint: n ] ifNil: [ '' ]. 
-					self class forCodePoint: self titlecase ifAbsent: [] }.
-				{ 'decimal digit value'. self decimalDigitValue ifNil: [ '' ]. self decimalDigitValue }.
-				{ 'digit value'. self digitValue ifNil: [ '' ]. self digitValue }.
-				{ 'numeric value'. self numericValue ifNil: [ '' ]. self numericValue }.
-				{ 'decomposition'. self decompositionDescription. self decompositionAsUCDs }
-			} ];
-		column: 'Key' evaluated: #first;
-		column: 'Value' evaluated: [ :entry | entry second asString ];
-		send: [ :entry | entry at: 3 ifAbsent: [ entry second ] ]
-]
-
-{ #category : #'gt-inspector-extension' }
-UnicodeCharacterData >> gtInspectorGlyphIn: composite [
-	<gtInspectorPresentationOrder: 40>
-	^ self character gtInspectorGlyphIn: composite
-]
-
 { #category : #testing }
 UnicodeCharacterData >> hasCanonicalDecomposition [
 	^ self hasDecomposition and: [ self decompositionMapping first isInteger ]
@@ -932,45 +887,6 @@ UnicodeCharacterData >> printOn: stream [
 	self codePoint printOn: stream base: 16 nDigits: 4.
 	stream space; << self name.
 	self oldName ifNotNil: [ stream space; nextPut: $(; << self oldName; nextPut: $) ]
-]
-
-{ #category : #'gt-spotter-extension' }
-UnicodeCharacterData >> spotterPreviewIn: aComposite [
-	<spotterPreview: 10>
-	^ aComposite table
-		title: 'Unicode Character';
-		display: [
-			{
-				{ 'codepoint'. self codePoint }.
-				{ 'codepoint hex'. 
-					String streamContents: [ :stream | 
-						stream << 'U+'.
-						self codePoint printOn: stream base: 16 nDigits: 4 ].
-					self codePoint }.
-				{ 'character'. self character printString. self character }.
-				{ 'name'. self name }.
-				{ 'old name'. self oldName ifNil: [ '' ]. self oldName }.
-				{ 'general category'. self generalCategory }.
-				{ 'canonical combining class'. self canonicalCombiningClass }.
-				{ 'bidirectional category'. self bidirectionalCategory }.
-				{ 'mirrored'. self mirrored }.
-				{ 'uppercase'. 
-					self uppercase ifNotNil: [ :n | Character codePoint: n ] ifNil: [ '' ]. 
-					self class forCodePoint: self uppercase ifAbsent: [] }.
-				{ 'lowercase'. 
-					self lowercase ifNotNil: [ :n | Character codePoint: n ] ifNil: [ '' ]. 
-					self class forCodePoint: self lowercase ifAbsent: [] }.
-				{ 'titlecase'. 
-					self titlecase ifNotNil: [ :n | Character codePoint: n ] ifNil: [ '' ]. 
-					self class forCodePoint: self titlecase ifAbsent: [] }.
-				{ 'decimal digit value'. self decimalDigitValue ifNil: [ '' ]. self decimalDigitValue }.
-				{ 'digit value'. self digitValue ifNil: [ '' ]. self digitValue }.
-				{ 'numeric value'. self numericValue ifNil: [ '' ]. self numericValue }.
-				{ 'decomposition'. self decompositionDescription. self decompositionAsUCDs }
-			} ];
-		column: 'Key' evaluated: #first;
-		column: 'Value' evaluated: [ :entry | entry second asString ];
-		entity: self
 ]
 
 { #category : #accessing }
